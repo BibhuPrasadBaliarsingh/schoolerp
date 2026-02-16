@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@school.com",
+      "password": "123456",
+      "role": "admin"
+    },
+    {
+      "id": "8595",
+      "username": "bibhu",
+      "email": "bibhu2022@gift.edu.in",
+      "password": "123456",
+      "role": "student",
+      "profilePic": "blob:http://localhost:5173/985eaacb-ce1c-4264-98dc-3619fcd25d35"
+    },
+    {
+      "id": "b59b",
+      "username": "babul",
+      "email": "babul@gmail.com",
+      "password": "123456",
+      "role": "student",
+      "profilePic": "blob:http://localhost:5173/79a53cc2-d724-4fe8-bb27-dfc91a1c559f"
+    },
+    {
+      "id": "3392",
+      "username": "teacher",
+      "email": "teacher@gmail.com",
+      "password": "123456",
+      "role": "teacher"
+    }
+  ]
+  ,
+  "fees": [
+    {
+      "id": "f1",
+      "studentId": "8595",
+      "studentName": "bibhu",
+      "amount": 500,
+      "dueDate": "2026-03-01",
+      "status": "pending"
+    },
+    {
+      "id": "f2",
+      "studentId": "b59b",
+      "studentName": "babul",
+      "amount": 750,
+      "dueDate": "2026-03-15",
+      "status": "paid"
+    }
+  ]
+}
