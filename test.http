@@ -1,0 +1,463 @@
+### School ERP Backend API Test
+### Base URL for all requests
+@baseUrl = http://localhost:5000/api
+
+### ====================
+### USER ROUTES
+### ====================
+
+### Get all users
+GET {{baseUrl}}/users
+
+### Get all users by role
+GET {{baseUrl}}/users?role=admin
+
+### Get specific user by ID
+GET {{baseUrl}}/users/{{userId}}
+
+### Create a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "password123",
+  "username": "john_student",
+  "role": "student"
+}
+
+### Create an admin user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "username": "admin_user",
+  "role": "admin"
+}
+
+### Create a teacher user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "teacher@example.com",
+  "password": "teacher123",
+  "username": "teacher_user",
+  "role": "teacher"
+}
+
+### Update user info
+PATCH {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+
+{
+  "username": "updated_username",
+  "profilePic": "https://example.com/pic.jpg"
+}
+
+### Delete user
+DELETE {{baseUrl}}/users/{{userId}}
+
+
+### ====================
+### ASSIGNMENT ROUTES
+### ====================
+
+### Get all assignments
+GET {{baseUrl}}/assignments
+
+### Get assignments by class
+GET {{baseUrl}}/assignments?class=10A
+
+### Get assignments by teacher (createdBy)
+GET {{baseUrl}}/assignments?createdBy={{teacherId}}
+
+### Get specific assignment by ID
+GET {{baseUrl}}/assignments/{{assignmentId}}
+
+### Create a new assignment
+POST {{baseUrl}}/assignments
+Content-Type: application/json
+
+{
+  "title": "Mathematics Chapter 5 - Algebra",
+  "description": "Solve all problems from section 5.1 to 5.5",
+  "dueDate": "2026-03-15T23:59:59Z",
+  "class": "10A",
+  "subject": "Mathematics",
+  "createdBy": "{{teacherId}}"
+}
+
+### Create another assignment
+POST {{baseUrl}}/assignments
+Content-Type: application/json
+
+{
+  "title": "Science Project - Photosynthesis",
+  "description": "Create a detailed report on the process of photosynthesis",
+  "dueDate": "2026-03-20T23:59:59Z",
+  "class": "9B",
+  "subject": "Science",
+  "createdBy": "{{teacherId}}"
+}
+
+### Update assignment
+PATCH {{baseUrl}}/assignments/{{assignmentId}}
+Content-Type: application/json
+
+{
+  "title": "Updated Assignment Title",
+  "dueDate": "2026-03-25T23:59:59Z"
+}
+
+### Delete assignment
+DELETE {{baseUrl}}/assignments/{{assignmentId}}
+
+
+### ====================
+### BUS ROUTES
+### ====================
+
+### Get all buses
+GET {{baseUrl}}/buses
+
+### Get specific bus by ID
+GET {{baseUrl}}/buses/{{busId}}
+
+### Create a new bus
+POST {{baseUrl}}/buses
+Content-Type: application/json
+
+{
+  "registrationNumber": "KL-01-AB-1234",
+  "driverName": "Rajesh Kumar",
+  "driverPhone": "+91-9876543210",
+  "capacity": 50,
+  "route": "Downtown - School Route A",
+  "routeWaypoints": [
+    {
+      "latitude": 10.3520,
+      "longitude": 76.5625,
+      "name": "Downtown Terminal"
+    },
+    {
+      "latitude": 10.3600,
+      "longitude": 76.5700,
+      "name": "Central Market"
+    },
+    {
+      "latitude": 10.3680,
+      "longitude": 76.5800,
+      "name": "City School"
+    }
+  ],
+  "status": "active",
+  "gpsDeviceId": "GPS-001"
+}
+
+### Create another bus
+POST {{baseUrl}}/buses
+Content-Type: application/json
+
+{
+  "registrationNumber": "KL-01-AB-5678",
+  "driverName": "Priya Singh",
+  "driverPhone": "+91-9876543211",
+  "capacity": 45,
+  "route": "Uptown - School Route B",
+  "routeWaypoints": [
+    {
+      "latitude": 10.4000,
+      "longitude": 76.6000,
+      "name": "Uptown Station"
+    },
+    {
+      "latitude": 10.3800,
+      "longitude": 76.5900,
+      "name": "Shopping Mall"
+    },
+    {
+      "latitude": 10.3680,
+      "longitude": 76.5800,
+      "name": "City School"
+    }
+  ],
+  "status": "active",
+  "gpsDeviceId": "GPS-002"
+}
+
+### Update bus info
+PATCH {{baseUrl}}/buses/{{busId}}
+Content-Type: application/json
+
+{
+  "driverPhone": "+91-9876543220",
+  "status": "inactive",
+  "currentLocation": {
+    "latitude": 10.3700,
+    "longitude": 76.5750,
+    "lastUpdated": "2026-02-26T12:30:00Z"
+  }
+}
+
+### Delete bus
+DELETE {{baseUrl}}/buses/{{busId}}
+
+
+### ====================
+### FEE ROUTES
+### ====================
+
+### Get all fees
+GET {{baseUrl}}/fees
+
+### Get specific fee by ID
+GET {{baseUrl}}/fees/{{feeId}}
+
+### Create a new fee record
+POST {{baseUrl}}/fees
+Content-Type: application/json
+
+{
+  "studentId": "{{studentId}}",
+  "studentName": "Arjun Sharma",
+  "amount": 5000,
+  "dueDate": "2026-03-31T23:59:59Z",
+  "status": "pending"
+}
+
+### Create another fee record
+POST {{baseUrl}}/fees
+Content-Type: application/json
+
+{
+  "studentId": "{{studentId}}",
+  "studentName": "Ananya Gupta",
+  "amount": 5000,
+  "dueDate": "2026-03-31T23:59:59Z",
+  "status": "pending"
+}
+
+### Create paid fee record
+POST {{baseUrl}}/fees
+Content-Type: application/json
+
+{
+  "studentId": "{{studentId}}",
+  "studentName": "Rohit Patel",
+  "amount": 5000,
+  "dueDate": "2026-02-15T23:59:59Z",
+  "status": "paid",
+  "paidDate": "2026-02-14T10:30:00Z"
+}
+
+### Update fee status to paid
+PATCH {{baseUrl}}/fees/{{feeId}}
+Content-Type: application/json
+
+{
+  "status": "paid",
+  "paidDate": "2026-02-26T10:30:00Z"
+}
+
+### Delete fee record
+DELETE {{baseUrl}}/fees/{{feeId}}
+
+
+### ====================
+### STAFF ROUTES
+### ====================
+
+### Get all staff
+GET {{baseUrl}}/staff
+
+### Get staff by department
+GET {{baseUrl}}/staff?department=Teaching
+
+### Get staff by status
+GET {{baseUrl}}/staff?status=active
+
+### Get specific staff by ID
+GET {{baseUrl}}/staff/{{staffId}}
+
+### Create a new staff member
+POST {{baseUrl}}/staff
+Content-Type: application/json
+
+{
+  "name": "Dr. Ramesh Kumar",
+  "email": "ramesh.kumar@school.com",
+  "phone": "+91-9876543212",
+  "position": "Mathematics Teacher",
+  "department": "Teaching",
+  "dateOfJoining": "2020-06-01T00:00:00Z",
+  "salary": 45000,
+  "status": "active"
+}
+
+### Create admin staff member
+POST {{baseUrl}}/staff
+Content-Type: application/json
+
+{
+  "name": "Ms. Priya Patel",
+  "email": "priya.patel@school.com",
+  "phone": "+91-9876543213",
+  "position": "Accountant",
+  "department": "Administration",
+  "dateOfJoining": "2019-08-15T00:00:00Z",
+  "salary": 35000,
+  "status": "active"
+}
+
+### Create support staff member
+POST {{baseUrl}}/staff
+Content-Type: application/json
+
+{
+  "name": "Rajesh Kumar",
+  "email": "rajesh.kumar@school.com",
+  "phone": "+91-9876543214",
+  "position": "Bus Driver",
+  "department": "Transport",
+  "dateOfJoining": "2018-01-10T00:00:00Z",
+  "salary": 20000,
+  "status": "active"
+}
+
+### Update staff info
+PATCH {{baseUrl}}/staff/{{staffId}}
+Content-Type: application/json
+
+{
+  "salary": 50000,
+  "position": "Senior Mathematics Teacher",
+  "email": "ramesh.kumar.updated@school.com"
+}
+
+### Delete staff member
+DELETE {{baseUrl}}/staff/{{staffId}}
+
+
+### ====================
+### INCOME/EXPENSE ROUTES
+### ====================
+
+### Get all income and expense records
+GET {{baseUrl}}/income-expense
+
+### Get all income records
+GET {{baseUrl}}/income-expense?type=income
+
+### Get all expense records
+GET {{baseUrl}}/income-expense?type=expense
+
+### Get specific record by ID
+GET {{baseUrl}}/income-expense/{{incomeExpenseId}}
+
+### Create income record - Fee collection
+POST {{baseUrl}}/income-expense
+Content-Type: application/json
+
+{
+  "type": "income",
+  "category": "Fee Collection",
+  "amount": 50000,
+  "description": "Monthly fees collected from students",
+  "date": "2026-02-26T00:00:00Z",
+  "paymentMode": "online",
+  "receiptNumber": "REC-2026-001",
+  "createdBy": "{{adminId}}"
+}
+
+### Create income record - Donation
+POST {{baseUrl}}/income-expense
+Content-Type: application/json
+
+{
+  "type": "income",
+  "category": "Donation",
+  "amount": 25000,
+  "description": "Donation from alumni",
+  "date": "2026-02-25T00:00:00Z",
+  "paymentMode": "cheque",
+  "receiptNumber": "CHQ-2026-001",
+  "createdBy": "{{adminId}}"
+}
+
+### Create expense record - Facility maintenance
+POST {{baseUrl}}/income-expense
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "category": "Maintenance",
+  "amount": 15000,
+  "description": "School building maintenance and repairs",
+  "date": "2026-02-20T00:00:00Z",
+  "paymentMode": "cheque",
+  "receiptNumber": "PAY-2026-001",
+  "createdBy": "{{adminId}}"
+}
+
+### Create expense record - Staff salary
+POST {{baseUrl}}/income-expense
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "category": "Salary",
+  "amount": 200000,
+  "description": "Monthly staff salary for February",
+  "date": "2026-02-01T00:00:00Z",
+  "paymentMode": "online",
+  "receiptNumber": "SAL-2026-02",
+  "createdBy": "{{adminId}}"
+}
+
+### Create expense record - Supplies
+POST {{baseUrl}}/income-expense
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "category": "Supplies",
+  "amount": 8000,
+  "description": "Office supplies and stationery",
+  "date": "2026-02-24T00:00:00Z",
+  "paymentMode": "cash",
+  "receiptNumber": "CASH-2026-001",
+  "createdBy": "{{adminId}}"
+}
+
+### Update income/expense record
+PATCH {{baseUrl}}/income-expense/{{incomeExpenseId}}
+Content-Type: application/json
+
+{
+  "amount": 60000,
+  "description": "Updated amount - Additional fees collected"
+}
+
+### Delete income/expense record
+DELETE {{baseUrl}}/income-expense/{{incomeExpenseId}}
+
+
+### ====================
+### NOTES ON VARIABLES
+### ====================
+# Replace the following variables with actual MongoDB ObjectIds from your database:
+# {{userId}} - A valid User ID (e.g., from Create user response)
+# {{teacherId}} - A valid User ID with role "teacher"
+# {{studentId}} - A valid User ID with role "student"
+# {{adminId}} - A valid User ID with role "admin"
+# {{assignmentId}} - A valid Assignment ID
+# {{busId}} - A valid Bus ID
+# {{feeId}} - A valid Fee ID
+# {{staffId}} - A valid Staff ID
+# {{incomeExpenseId}} - A valid IncomeExpense ID
+#
+# Run requests from top to bottom, copy IDs from responses and paste them in the variables above.
+# Or you can use VS Code REST Client extension to automatically capture variables from responses.
