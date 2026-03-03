@@ -19,6 +19,7 @@ mongoose
   .catch((err) => console.log("MongoDB error:", err));
 
 // Routes
+import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import feeRoutes from "./routes/fees.js";
 import incomeExpenseRoutes from "./routes/incomeExpense.js";
@@ -26,6 +27,7 @@ import staffRoutes from "./routes/staff.js";
 import assignmentRoutes from "./routes/assignments.js";
 import busRoutes from "./routes/buses.js";
 
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/fees", feeRoutes);
 app.use("/api/income-expense", incomeExpenseRoutes);

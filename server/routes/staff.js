@@ -1,9 +1,10 @@
 import express from "express";
 import Staff from "../models/Staff.js";
+import authMiddleware, { isAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const { department, status } = req.query;
     let query = {};
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const staff = await Staff.findById(req.params.id);
     if (!staff) return res.status(404).json({ error: "Staff not found" });
@@ -26,7 +27,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, isAdmin, async (req, res) => {
   try {
     const staff = await Staff.create(req.body);
     res.status(201).json(staff);
@@ -35,7 +36,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     const staff = await Staff.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(staff);
@@ -44,7 +45,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     await Staff.findByIdAndDelete(req.params.id);
     res.json({ message: "Staff deleted" });

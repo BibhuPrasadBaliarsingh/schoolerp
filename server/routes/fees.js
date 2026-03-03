@@ -1,9 +1,10 @@
 import express from "express";
 import Fee from "../models/Fee.js";
+import authMiddleware, { isAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const fees = await Fee.find();
     res.json(fees);
@@ -12,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const fee = await Fee.findById(req.params.id);
     if (!fee) return res.status(404).json({ error: "Fee not found" });
@@ -22,7 +23,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, isAdmin, async (req, res) => {
   try {
     const fee = await Fee.create(req.body);
     res.status(201).json(fee);
@@ -31,7 +32,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     const fee = await Fee.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(fee);
@@ -40,7 +41,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     await Fee.findByIdAndDelete(req.params.id);
     res.json({ message: "Fee deleted" });

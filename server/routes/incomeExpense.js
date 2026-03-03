@@ -1,9 +1,10 @@
 import express from "express";
 import IncomeExpense from "../models/IncomeExpense.js";
+import authMiddleware, { isAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, isAdmin, async (req, res) => {
   try {
     const { type } = req.query;
     let query = {};
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     const record = await IncomeExpense.findById(req.params.id);
     if (!record) return res.status(404).json({ error: "Record not found" });
@@ -25,7 +26,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, isAdmin, async (req, res) => {
   try {
     const record = await IncomeExpense.create(req.body);
     res.status(201).json(record);
@@ -34,7 +35,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     const record = await IncomeExpense.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(record);
@@ -43,7 +44,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
     await IncomeExpense.findByIdAndDelete(req.params.id);
     res.json({ message: "Record deleted" });

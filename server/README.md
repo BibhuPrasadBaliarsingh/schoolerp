@@ -21,6 +21,7 @@ npm install
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/schoolerp
 NODE_ENV=development
+JWT_SECRET=your_ultra_secure_jwt_secret_key_change_this_in_production_2026
 ```
 
 3. Start MongoDB locally:
@@ -38,41 +39,92 @@ Server will run on `http://localhost:5000`
 
 ## API Routes
 
-### Users
-- `GET /api/users` - Get all users (supports query: role, email, password)
-- `POST /api/users` - Create user
-- `PATCH /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
+### Authentication 🔐
+- `POST /api/auth/register` - Register new user (returns JWT token)
+- `POST /api/auth/login` - Login user (returns JWT token)
+- `GET /api/auth/me` - Get current user (Protected)
 
-### Fees
-- `GET /api/fees` - Get all fees
-- `POST /api/fees` - Create fee
-- `PATCH /api/fees/:id` - Update fee
-- `DELETE /api/fees/:id` - Delete fee
+**Authentication Required**: Most routes require a JWT token in the Authorization header:
+```
+Authorization: Bearer <your-jwt-token>
+```
 
-### Income/Expense
-- `GET /api/income-expense` - Get records (supports query: type)
-- `POST /api/income-expense` - Create record
-- `PATCH /api/income-expense/:id` - Update record
-- `DELETE /api/income-expense/:id` - Delete record
+**User Roles**:
+- `admin` - Full access to all routes
+- `teacher` - Can manage assignments, view students
+- `student` - Limited access, view only
 
-### Staff
-- `GET /api/staff` - Get all staff
-- `POST /api/staff` - Create staff
-- `PATCH /api/staff/:id` - Update staff
-- `DELETE /api/staff/:id` - Delete staff
+### Users (Protected)
+- `GET /api/users` - Get all users (Admin only)
+- `GET /api/users/:id` - Get user by ID (Protected)
+- `PATCH /api/users/:id` - Update user (Protected)
+- `DELETE /api/users/:id` - Delete user (Admin only)
 
-### Assignments
-- `GET /api/assignments` - Get assignments
-- `POST /api/assignments` - Create assignment
-- `PATCH /api/assignments/:id` - Update assignment
-- `DELETE /api/assignments/:id` - Delete assignment
+### Fees (Protected)
+- `GET /api/fees` - Get all fees (Protected)
+- `POST /api/fees` - Create fee (Admin only)
+- `PATCH /api/fees/:id` - Update fee (Admin only)
+- `DELETE /api/fees/:id` - Delete fee (Admin only)
 
-### Buses
-- `GET /api/buses` - Get all buses
-- `POST /api/buses` - Create bus
-- `PATCH /api/buses/:id` - Update bus location
-- `DELETE /api/buses/:id` - Delete bus
+### Income/Expense (Admin Only)
+- `GET /api/income-expense` - Get records (Admin only)
+- `POST /api/income-expense` - Create record (Admin only)
+- `PATCH /api/income-expense/:id` - Update record (Admin only)
+- `DELETE /api/income-expense/:id` - Delete record (Admin only)
+
+### Staff (Protected)
+- `GET /api/staff` - Get all staff (Protected)
+- `POST /api/staff` - Create staff (Admin only)
+- `PATCH /api/staff/:id` - Update staff (Admin only)
+- `DELETE /api/staff/:id` - Delete staff (Admin only)
+
+### Assignments (Protected)
+- `GET /api/assignments` - Get assignments (Protected)
+- `POST /api/assignments` - Create assignment (Teacher/Admin only)
+- `PATCH /api/assignments/:id` - Update assignment (Teacher/Admin only)
+- `DELETE /api/assignments/:id` - Delete assignment (Teacher/Admin only)
+
+### Buses (Protected)
+- `GET /api/buses` - Get all buses (Protected)
+- `POST /api/buses` - Create bus (Admin only)
+- `PATCH /api/buses/:id` - Update bus location (Admin only)
+- `DELETE /api/buses/:id` - Delete bus (Admin only)
+
+## Security Features
+
+- ✅ Password hashing with bcryptjs (10 rounds)
+- ✅ JWT-based authentication (7-day expiry)
+- ✅ Role-based access control (RBAC)
+- ✅ Protected routes with middleware
+- ✅ Token verification on every request
+
+## Quick Start Guide
+
+1. **Register an admin user**:
+```bash
+POST /api/auth/register
+{
+  "email": "admin@school.com",
+  "password": "admin123",
+  "username": "admin",
+  "role": "admin"
+}
+```
+
+2. **Login to get token**:
+```bash
+POST /api/auth/login
+{
+  "email": "admin@school.com",
+  "password": "admin123"
+}
+```
+
+3. **Use the token** in subsequent requests:
+```bash
+GET /api/users
+Authorization: Bearer <your-token-here>
+```
 
 ## Notes
 - All routes use RESTful conventions
