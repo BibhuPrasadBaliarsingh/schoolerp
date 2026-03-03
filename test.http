@@ -1,22 +1,14 @@
 ### School ERP Backend API Test
 ### Base URL for all requests
 @baseUrl = http://localhost:5000/api
+@token = YOUR_JWT_TOKEN_HERE
 
 ### ====================
-### USER ROUTES
+### AUTHENTICATION ROUTES
 ### ====================
 
-### Get all users
-GET {{baseUrl}}/users
-
-### Get all users by role
-GET {{baseUrl}}/users?role=admin
-
-### Get specific user by ID
-GET {{baseUrl}}/users/{{userId}}
-
-### Create a new user
-POST {{baseUrl}}/users
+### Register a new user (Student)
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -26,8 +18,8 @@ Content-Type: application/json
   "role": "student"
 }
 
-### Create an admin user
-POST {{baseUrl}}/users
+### Register Admin
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -37,8 +29,8 @@ Content-Type: application/json
   "role": "admin"
 }
 
-### Create a teacher user
-POST {{baseUrl}}/users
+### Register Teacher
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -48,38 +40,110 @@ Content-Type: application/json
   "role": "teacher"
 }
 
-### Update user info
-PATCH {{baseUrl}}/users/{{userId}}
+### Login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "updated_username",
-  "profilePic": "https://example.com/pic.jpg"
+  "email": "admin@example.com",
+  "password": "admin123"
 }
 
-### Delete user
-DELETE {{baseUrl}}/users/{{userId}}
+### Get Current User (Protected)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
 
+### ====================
+### USER ROUTES
+### ====================
+
+### Get all users (Admin only)
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
+### Get all users by role (Admin only)
+GET {{baseUrl}}/users?role=admin
+Authorization: Bearer {{token}}
+
+### Get specific user by ID (Protected)
+GET {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+
+### Update user (Protected)
+PATCH {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "username": "updated_username"
+}
+
+### Delete user (Admin only)
+DELETE {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+
+### ====================
+### FEE ROUTES
+### ====================
+
+### Get all fees (Protected)
+GET {{baseUrl}}/fees
+Authorization: Bearer {{token}}
+
+### Get specific fee by ID (Protected)
+GET {{baseUrl}}/fees/{{feeId}}
+Authorization: Bearer {{token}}
+
+### Create a new fee (Admin only)
+POST {{baseUrl}}/fees
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "studentId": "{{studentId}}",
+  "amount": 5000,
+  "type": "tuition",
+  "status": "pending",
+  "dueDate": "2026-04-01T00:00:00Z"
+}
+
+### Update fee (Admin only)
+PATCH {{baseUrl}}/fees/{{feeId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "status": "paid"
+}
+
+### Delete fee (Admin only)
+DELETE {{baseUrl}}/fees/{{feeId}}
+Authorization: Bearer {{token}}
 
 ### ====================
 ### ASSIGNMENT ROUTES
 ### ====================
 
-### Get all assignments
+### Get all assignments (Protected)
 GET {{baseUrl}}/assignments
+Authorization: Bearer {{token}}
 
-### Get assignments by class
+### Get assignments by class (Protected)
 GET {{baseUrl}}/assignments?class=10A
+Authorization: Bearer {{token}}
 
-### Get assignments by teacher (createdBy)
+### Get assignments by teacher (Protected)
 GET {{baseUrl}}/assignments?createdBy={{teacherId}}
+Authorization: Bearer {{token}}
 
-### Get specific assignment by ID
+### Get specific assignment by ID (Protected)
 GET {{baseUrl}}/assignments/{{assignmentId}}
+Authorization: Bearer {{token}}
 
-### Create a new assignment
+### Create a new assignment (Teacher/Admin only)
 POST {{baseUrl}}/assignments
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "Mathematics Chapter 5 - Algebra",
@@ -90,45 +154,36 @@ Content-Type: application/json
   "createdBy": "{{teacherId}}"
 }
 
-### Create another assignment
-POST {{baseUrl}}/assignments
-Content-Type: application/json
-
-{
-  "title": "Science Project - Photosynthesis",
-  "description": "Create a detailed report on the process of photosynthesis",
-  "dueDate": "2026-03-20T23:59:59Z",
-  "class": "9B",
-  "subject": "Science",
-  "createdBy": "{{teacherId}}"
-}
-
-### Update assignment
+### Update assignment (Teacher/Admin only)
 PATCH {{baseUrl}}/assignments/{{assignmentId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "Updated Assignment Title",
   "dueDate": "2026-03-25T23:59:59Z"
 }
 
-### Delete assignment
+### Delete assignment (Teacher/Admin only)
 DELETE {{baseUrl}}/assignments/{{assignmentId}}
-
+Authorization: Bearer {{token}}
 
 ### ====================
 ### BUS ROUTES
 ### ====================
 
-### Get all buses
+### Get all buses (Protected)
 GET {{baseUrl}}/buses
+Authorization: Bearer {{token}}
 
-### Get specific bus by ID
+### Get specific bus by ID (Protected)
 GET {{baseUrl}}/buses/{{busId}}
+Authorization: Bearer {{token}}
 
-### Create a new bus
+### Create a new bus (Admin only)
 POST {{baseUrl}}/buses
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "registrationNumber": "KL-01-AB-1234",
@@ -157,40 +212,10 @@ Content-Type: application/json
   "gpsDeviceId": "GPS-001"
 }
 
-### Create another bus
-POST {{baseUrl}}/buses
-Content-Type: application/json
-
-{
-  "registrationNumber": "KL-01-AB-5678",
-  "driverName": "Priya Singh",
-  "driverPhone": "+91-9876543211",
-  "capacity": 45,
-  "route": "Uptown - School Route B",
-  "routeWaypoints": [
-    {
-      "latitude": 10.4000,
-      "longitude": 76.6000,
-      "name": "Uptown Station"
-    },
-    {
-      "latitude": 10.3800,
-      "longitude": 76.5900,
-      "name": "Shopping Mall"
-    },
-    {
-      "latitude": 10.3680,
-      "longitude": 76.5800,
-      "name": "City School"
-    }
-  ],
-  "status": "active",
-  "gpsDeviceId": "GPS-002"
-}
-
-### Update bus info
+### Update bus info (Admin only)
 PATCH {{baseUrl}}/buses/{{busId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "driverPhone": "+91-9876543220",
@@ -202,89 +227,34 @@ Content-Type: application/json
   }
 }
 
-### Delete bus
+### Delete bus (Admin only)
 DELETE {{baseUrl}}/buses/{{busId}}
-
-
-### ====================
-### FEE ROUTES
-### ====================
-
-### Get all fees
-GET {{baseUrl}}/fees
-
-### Get specific fee by ID
-GET {{baseUrl}}/fees/{{feeId}}
-
-### Create a new fee record
-POST {{baseUrl}}/fees
-Content-Type: application/json
-
-{
-  "studentId": "{{studentId}}",
-  "studentName": "Arjun Sharma",
-  "amount": 5000,
-  "dueDate": "2026-03-31T23:59:59Z",
-  "status": "pending"
-}
-
-### Create another fee record
-POST {{baseUrl}}/fees
-Content-Type: application/json
-
-{
-  "studentId": "{{studentId}}",
-  "studentName": "Ananya Gupta",
-  "amount": 5000,
-  "dueDate": "2026-03-31T23:59:59Z",
-  "status": "pending"
-}
-
-### Create paid fee record
-POST {{baseUrl}}/fees
-Content-Type: application/json
-
-{
-  "studentId": "{{studentId}}",
-  "studentName": "Rohit Patel",
-  "amount": 5000,
-  "dueDate": "2026-02-15T23:59:59Z",
-  "status": "paid",
-  "paidDate": "2026-02-14T10:30:00Z"
-}
-
-### Update fee status to paid
-PATCH {{baseUrl}}/fees/{{feeId}}
-Content-Type: application/json
-
-{
-  "status": "paid",
-  "paidDate": "2026-02-26T10:30:00Z"
-}
-
-### Delete fee record
-DELETE {{baseUrl}}/fees/{{feeId}}
-
+Authorization: Bearer {{token}}
 
 ### ====================
 ### STAFF ROUTES
 ### ====================
 
-### Get all staff
+### Get all staff (Protected)
 GET {{baseUrl}}/staff
+Authorization: Bearer {{token}}
 
-### Get staff by department
+### Get staff by department (Protected)
 GET {{baseUrl}}/staff?department=Teaching
+Authorization: Bearer {{token}}
 
-### Get staff by status
+### Get staff by status (Protected)
 GET {{baseUrl}}/staff?status=active
+Authorization: Bearer {{token}}
 
-### Get specific staff by ID
+### Get specific staff by ID (Protected)
 GET {{baseUrl}}/staff/{{staffId}}
+Authorization: Bearer {{token}}
 
-### Create a new staff member
+### Create a new staff member (Admin only)
 POST {{baseUrl}}/staff
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "Dr. Ramesh Kumar",
@@ -297,39 +267,10 @@ Content-Type: application/json
   "status": "active"
 }
 
-### Create admin staff member
-POST {{baseUrl}}/staff
-Content-Type: application/json
-
-{
-  "name": "Ms. Priya Patel",
-  "email": "priya.patel@school.com",
-  "phone": "+91-9876543213",
-  "position": "Accountant",
-  "department": "Administration",
-  "dateOfJoining": "2019-08-15T00:00:00Z",
-  "salary": 35000,
-  "status": "active"
-}
-
-### Create support staff member
-POST {{baseUrl}}/staff
-Content-Type: application/json
-
-{
-  "name": "Rajesh Kumar",
-  "email": "rajesh.kumar@school.com",
-  "phone": "+91-9876543214",
-  "position": "Bus Driver",
-  "department": "Transport",
-  "dateOfJoining": "2018-01-10T00:00:00Z",
-  "salary": 20000,
-  "status": "active"
-}
-
-### Update staff info
+### Update staff info (Admin only)
 PATCH {{baseUrl}}/staff/{{staffId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "salary": 50000,
@@ -337,29 +278,34 @@ Content-Type: application/json
   "email": "ramesh.kumar.updated@school.com"
 }
 
-### Delete staff member
+### Delete staff member (Admin only)
 DELETE {{baseUrl}}/staff/{{staffId}}
-
+Authorization: Bearer {{token}}
 
 ### ====================
 ### INCOME/EXPENSE ROUTES
 ### ====================
 
-### Get all income and expense records
+### Get all income and expense records (Admin only)
 GET {{baseUrl}}/income-expense
+Authorization: Bearer {{token}}
 
-### Get all income records
+### Get all income records (Admin only)
 GET {{baseUrl}}/income-expense?type=income
+Authorization: Bearer {{token}}
 
-### Get all expense records
+### Get all expense records (Admin only)
 GET {{baseUrl}}/income-expense?type=expense
+Authorization: Bearer {{token}}
 
-### Get specific record by ID
+### Get specific record by ID (Admin only)
 GET {{baseUrl}}/income-expense/{{incomeExpenseId}}
+Authorization: Bearer {{token}}
 
-### Create income record - Fee collection
+### Create income record - Fee collection (Admin only)
 POST {{baseUrl}}/income-expense
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "type": "income",
@@ -372,24 +318,10 @@ Content-Type: application/json
   "createdBy": "{{adminId}}"
 }
 
-### Create income record - Donation
+### Create expense record - Facility maintenance (Admin only)
 POST {{baseUrl}}/income-expense
 Content-Type: application/json
-
-{
-  "type": "income",
-  "category": "Donation",
-  "amount": 25000,
-  "description": "Donation from alumni",
-  "date": "2026-02-25T00:00:00Z",
-  "paymentMode": "cheque",
-  "receiptNumber": "CHQ-2026-001",
-  "createdBy": "{{adminId}}"
-}
-
-### Create expense record - Facility maintenance
-POST {{baseUrl}}/income-expense
-Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "type": "expense",
@@ -402,52 +334,27 @@ Content-Type: application/json
   "createdBy": "{{adminId}}"
 }
 
-### Create expense record - Staff salary
-POST {{baseUrl}}/income-expense
-Content-Type: application/json
-
-{
-  "type": "expense",
-  "category": "Salary",
-  "amount": 200000,
-  "description": "Monthly staff salary for February",
-  "date": "2026-02-01T00:00:00Z",
-  "paymentMode": "online",
-  "receiptNumber": "SAL-2026-02",
-  "createdBy": "{{adminId}}"
-}
-
-### Create expense record - Supplies
-POST {{baseUrl}}/income-expense
-Content-Type: application/json
-
-{
-  "type": "expense",
-  "category": "Supplies",
-  "amount": 8000,
-  "description": "Office supplies and stationery",
-  "date": "2026-02-24T00:00:00Z",
-  "paymentMode": "cash",
-  "receiptNumber": "CASH-2026-001",
-  "createdBy": "{{adminId}}"
-}
-
-### Update income/expense record
+### Update income/expense record (Admin only)
 PATCH {{baseUrl}}/income-expense/{{incomeExpenseId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "amount": 60000,
   "description": "Updated amount - Additional fees collected"
 }
 
-### Delete income/expense record
+### Delete income/expense record (Admin only)
 DELETE {{baseUrl}}/income-expense/{{incomeExpenseId}}
-
+Authorization: Bearer {{token}}
 
 ### ====================
-### NOTES ON VARIABLES
+### NOTES ON USAGE
 ### ====================
+# 1. First, register/login to get a JWT token
+# 2. Copy the token from response and replace {{token}} variable at the top
+# 3. All protected routes require: Authorization: Bearer {{token}}
+#
 # Replace the following variables with actual MongoDB ObjectIds from your database:
 # {{userId}} - A valid User ID (e.g., from Create user response)
 # {{teacherId}} - A valid User ID with role "teacher"
@@ -458,6 +365,4 @@ DELETE {{baseUrl}}/income-expense/{{incomeExpenseId}}
 # {{feeId}} - A valid Fee ID
 # {{staffId}} - A valid Staff ID
 # {{incomeExpenseId}} - A valid IncomeExpense ID
-#
-# Run requests from top to bottom, copy IDs from responses and paste them in the variables above.
-# Or you can use VS Code REST Client extension to automatically capture variables from responses.
+
