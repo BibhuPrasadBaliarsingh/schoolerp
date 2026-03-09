@@ -26,6 +26,16 @@ import incomeExpenseRoutes from "./routes/incomeExpense.js";
 import staffRoutes from "./routes/staff.js";
 import assignmentRoutes from "./routes/assignments.js";
 import busRoutes from "./routes/buses.js";
+import studentRoutes from "./routes/students.js";
+import classRoutes from "./routes/classes.js";
+import subjectRoutes from "./routes/subjects.js";
+import examRoutes from "./routes/exams.js";
+import marksRoutes from "./routes/marks.js";
+import attendanceRoutes from "./routes/attendance.js";
+import notificationRoutes from "./routes/notifications.js";
+import messageRoutes from "./routes/messages.js";
+import idCardRoutes from "./routes/idcards.js";
+import admitCardRoutes from "./routes/admitcards.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -34,6 +44,16 @@ app.use("/api/income-expense", incomeExpenseRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/assignments", assignmentRoutes);
 app.use("/api/buses", busRoutes);
+app.use("/api/students", studentRoutes);
+app.use("/api/classes", classRoutes);
+app.use("/api/subjects", subjectRoutes);
+app.use("/api/exams", examRoutes);
+app.use("/api/marks", marksRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/idcards", idCardRoutes);
+app.use("/api/admitcards", admitCardRoutes);
 
 // Basic route
 app.get("/", (req, res) => {
